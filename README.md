@@ -35,8 +35,8 @@ pip install netifaces
 ## 来源
 本项目只是借鉴网络上各位高手代码的缝合怪，各路英雄豪杰：
 
-[深澜认证协议分析,python模拟登录 huxiaofan1223/jxnu_srun](https://github.com/huxiaofan1223/jxnu_srun)
+[huxiaofan1223/jxnu_srun](https://github.com/huxiaofan1223/jxnu_srun)
 
-[Python获取网卡信息（名称、MAC、IP、网关等）DingGuodong/LinuxBashShellScriptForOps](https://github.com/DingGuodong/LinuxBashShellScriptForOps/blob/master/projects/WindowsSystemOps/Network/getNetworkStatus.py)
+[DingGuodong/LinuxBashShellScriptForOps](https://github.com/DingGuodong/LinuxBashShellScriptForOps/blob/master/projects/WindowsSystemOps/Network/getNetworkStatus.py)
 
 [Send http request through specific network interface](https://stackoverflow.com/questions/48996494/send-http-request-through-specific-network-interface)
