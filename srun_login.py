@@ -229,7 +229,7 @@ def login():
 	print(srun_portal_res.text)
 
 if __name__ == '__main__':
-	global username, password, interfacelist 
+	#global username, password, interfacelist 
 	for interface in interfacelist:
 		ip = init_getip(interface)
 		get_token()
