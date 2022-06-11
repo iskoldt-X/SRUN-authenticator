@@ -205,8 +205,8 @@ def get_token():
         test = session_for_src_addr(ip)
         get_challenge_res=test.get(get_challenge_api,params=get_challenge_params,headers=header)
         token=re.search('"challenge":"(.*?)"',get_challenge_res.text).group(1)
-        print(get_challenge_res.text)
-        print("token为:"+token)
+        print(get_challenge_res.text, flush=True)
+        print("token为:"+token, flush=True)
 
 def isConnected(ip):
     try:
