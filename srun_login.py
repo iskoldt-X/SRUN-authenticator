@@ -59,7 +59,7 @@ def session_for_src_addr(addr: str) -> requests.Session:
 def _getbyte(s, i):
     x = ord(s[i]);
     if (x > 255):
-        print("INVALID_CHARACTER_ERR: DOM Exception 5")
+        print("INVALID_CHARACTER_ERR: DOM Exception 5", flush=True)
         exit(0)
     return x
 
@@ -189,12 +189,12 @@ def get_info():
 
 def init_getip(interface):
     ip = netifaces.ifaddresses(interface)[2][0]['addr']
-    print("获取{0}端口的ip".format(interface))
-    print("ip:"+ip)
+    print("获取{0}端口的ip".format(interface), flush=True)
+    print("ip:"+ip, flush=True)
     return ip
 
 def get_token():
-        # print("获取token")
+        # print("获取token", flush=True)
         global token
         get_challenge_params={
                 "callback": "jQuery112404953340710317169_"+str(int(time.time()*1000)),
@@ -222,7 +222,7 @@ def do_complex_work():
         i="{SRBX1}"+get_base64(get_xencode(i,token))
         hmd5=get_md5(password,token)
         chksum=get_sha1(get_chksum())
-        print("所有加密工作已完成")
+        print("所有加密工作已完成", flush=True)
     
 def login():
         srun_portal_params={
@@ -244,14 +244,14 @@ def login():
         # print(srun_portal_params)
         test = session_for_src_addr(ip)
         srun_portal_res=test.get(srun_portal_api,params=srun_portal_params,headers=header)
-        print(srun_portal_res.text)
+        print(srun_portal_res.text, flush=True)
 
 if __name__ == '__main__':
     while True:
         for interface in interfacelist:
             ip = init_getip(interface)
             if isConnected(ip):
-                print('端口{0}已通过认证，无需再次认证'.format(interface))
+                print('端口{0}已通过认证，无需再次认证'.format(interface), flush=True)
             else:
                 get_token()
                 do_complex_work()
