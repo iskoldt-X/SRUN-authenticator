@@ -15,11 +15,11 @@ password=''
 sleeptime = 300
 
 if interfacelist = ['']:
-    interfacelist = os.getenv('INTERFACES').strip().split(' ')
-if username = '':
-    username = os.getenv('USERNAME').strip()
-if password = '':
-    password = os.getenv('PASSWORD')
+    interfacelist == os.getenv('INTERFACES').strip().split('.')
+if username == '':
+    username == os.getenv('USERNAME').strip()
+if password == '':
+    password == os.getenv('PASSWORD')
 
 
 
