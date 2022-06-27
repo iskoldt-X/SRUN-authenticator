@@ -189,12 +189,12 @@ def get_info():
 
 def init_getip(interface):
     ip = netifaces.ifaddresses(interface)[2][0]['addr']
-    print("获取{0}端口的ip".format(interface), flush=True)
-    print("ip:"+ip, flush=True)
+    print("{0} 获取{1}端口的ip".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), interface), flush=True)
+    print("{0} ip:".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))+ip, flush=True)
     return ip
 
 def get_token():
-        # print("获取token", flush=True)
+        # print("{0} 获取token".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))), flush=True)
         global token
         get_challenge_params={
                 "callback": "jQuery112404953340710317169_"+str(int(time.time()*1000)),
@@ -206,7 +206,7 @@ def get_token():
         get_challenge_res=test.get(get_challenge_api,params=get_challenge_params,headers=header)
         token=re.search('"challenge":"(.*?)"',get_challenge_res.text).group(1)
         print(get_challenge_res.text, flush=True)
-        print("token为:"+token, flush=True)
+        print("{0}token为:".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))+token, flush=True)
 
 def isConnected(ip):
     try:
@@ -222,7 +222,7 @@ def do_complex_work():
         i="{SRBX1}"+get_base64(get_xencode(i,token))
         hmd5=get_md5(password,token)
         chksum=get_sha1(get_chksum())
-        print("所有加密工作已完成", flush=True)
+        print("{0} 所有加密工作已完成".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))), flush=True)
     
 def login():
         srun_portal_params={
@@ -251,7 +251,7 @@ if __name__ == '__main__':
         for interface in interfacelist:
             ip = init_getip(interface)
             if isConnected(ip):
-                print('端口{0}已通过认证，无需再次认证'.format(interface), flush=True)
+                print('{0} 端口{1}已通过认证，无需再次认证'.format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), interface), flush=True)
             else:
                 get_token()
                 do_complex_work()
