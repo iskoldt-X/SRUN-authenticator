@@ -59,7 +59,7 @@ def session_for_src_addr(addr: str) -> requests.Session:
 def _getbyte(s, i):
     x = ord(s[i]);
     if (x > 255):
-        print("INVALID_CHARACTER_ERR: DOM Exception 5", flush=True)
+        print("{0} INVALID_CHARACTER_ERR: DOM Exception 5".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))), flush=True)
         exit(0)
     return x
 
@@ -205,7 +205,7 @@ def get_token():
         test = session_for_src_addr(ip)
         get_challenge_res=test.get(get_challenge_api,params=get_challenge_params,headers=header)
         token=re.search('"challenge":"(.*?)"',get_challenge_res.text).group(1)
-        print(get_challenge_res.text, flush=True)
+        print("{0} {1}".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), get_challenge_res.text), flush=True)
         print("{0}token为:".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))+token, flush=True)
 
 def isConnected(ip):
@@ -244,7 +244,7 @@ def login():
         # print(srun_portal_params)
         test = session_for_src_addr(ip)
         srun_portal_res=test.get(srun_portal_api,params=srun_portal_params,headers=header)
-        print(srun_portal_res.text, flush=True)
+        print("{0} {1}".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), srun_portal_res.text), flush=True)
 
 if __name__ == '__main__':
     while True:
