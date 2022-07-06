@@ -5,6 +5,8 @@
 
 本脚本已经支持通过Docker 运行！
 
+## 用Docker 运行国科大校园网深澜认证Python 脚本
+
 ```
 docker run -d \
     --name authenticator \
@@ -19,7 +21,8 @@ docker run -d \
 
 [iskoldt/srunauthenticator](https://hub.docker.com/repository/docker/iskoldt/srunauthenticator)
 
-## 使用方法
+## 非Docker 运行国科大校园网深澜认证Python 脚本
+
 编辑如下三个变量，分别是接入校园网的网口名字，用户名和密码。
 
 ```
