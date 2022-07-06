@@ -3,6 +3,22 @@
 
 旨在方便同学们的日常使用。
 
+本脚本已经支持通过Docker 运行！
+
+```
+docker run -d \
+    --name authenticator \
+    --restart unless-stopped \
+    --log-opt max-size=1m \
+    --network host \
+    -e USERNAME=yourusernamehere \
+    -e PASSWORD=yourpasswordhere \
+    -e INTERFACES=eth0(the interface you plugged in, separate them with a period "." if you have more than one) \
+    iskoldt/srunauthenticator:latest
+```
+
+[iskoldt/srunauthenticator](https://hub.docker.com/repository/docker/iskoldt/srunauthenticator)
+
 ## 使用方法
 编辑如下三个变量，分别是接入校园网的网口名字，用户名和密码。
 
