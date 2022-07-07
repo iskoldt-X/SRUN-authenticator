@@ -1,6 +1,4 @@
-MAINTAINER iskoldt
 ARG python=python:3.10-slim
-
 FROM ${python} AS build
 RUN apt-get update && apt-get install  --no-install-recommends --assume-yes gcc python3-dev
 RUN python3 -m venv /venv
@@ -8,12 +6,12 @@ ENV PATH=/venv/bin:$PATH
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-
 FROM ${python}
+MAINTAINER iskoldt
 COPY --from=build /venv /venv
-#ENV PATH=/venv/bin:$PATH
+ENV PATH=/venv/bin:$PATH
 COPY . .
 ENV USERNAME admin                                                        
 ENV PASSWORD password                                                     
 ENV INTERFACES eth0                                                       
-CMD ["/venv/bin/python3","./srun_login.py"]
+CMD ["python3","./srun_login.py"]
