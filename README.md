@@ -13,6 +13,7 @@ docker run -d \
     --restart unless-stopped \
     --log-opt max-size=1m \
     --network host \
+    -e TZ="Asia/Shanghai" \
     -e USERNAME=yourusernamehere \
     -e PASSWORD=yourpasswordhere \
     -e INTERFACES=eth0(the interface you plugged in, separate them with a period "." if you have more than one) \
