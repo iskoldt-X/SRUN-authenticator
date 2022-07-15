@@ -41,13 +41,13 @@ get_challenge_api="https://portal.ucas.ac.cn/cgi-bin/get_challenge"
 srun_portal_api="https://portal.ucas.ac.cn/cgi-bin/srun_portal"
 ```
 
-保存后润行：
+保存后运行：
 
 ```
 python3 srun_login.py
 ```
 
-如果依赖不全，可以根据报错安装缺失的库，如润行：
+如果依赖不全，可以根据报错安装缺失的库，如运行：
 ```
 pip install netifaces
 ```
