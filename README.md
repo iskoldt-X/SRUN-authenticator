@@ -21,7 +21,7 @@ docker run -d \
     iskoldt/srunauthenticator:latest
 ```
 
-[iskoldt/srunauthenticator](https://hub.docker.com/repository/docker/iskoldt/srunauthenticator)
+[iskoldt/srunauthenticator](https://hub.docker.com/r/iskoldt/srunauthenticator)
 
 ## 非Docker 运行国科大校园网深澜认证Python 脚本
 
