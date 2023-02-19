@@ -1,12 +1,12 @@
 # 深澜认证Python 脚本
-国科大校园网深澜认证Python 脚本
 
-旨在方便同学们的日常使用。
+<img src="https://img.shields.io/docker/pulls/iskoldt/srunauthenticator.svg"/>
+
+校园网深澜认证Python 脚本，旨在方便同学们的日常使用。默认国科大，其他学校也可以使用。
 
 本脚本已经支持通过Docker 运行!
-最新arm64 架构镜像已成功压缩至73.7MB！
 
-## 用Docker 运行国科大校园网深澜认证Python 脚本
+## 国科大同学用Docker 运行校园网深澜认证Python 脚本
 
 ```
 docker run -d \
@@ -23,7 +23,35 @@ docker run -d \
 
 [iskoldt/srunauthenticator](https://hub.docker.com/r/iskoldt/srunauthenticator)
 
-## 非Docker 运行国科大校园网深澜认证Python 脚本
+## 其他学校的朋友用Docker 运行校园网深澜认证Python 脚本
+
+注意更改这三行：
+
+```
+    -e init_url="yours" \
+    -e get_challenge_api="yours" \
+    -e srun_portal_api="yours" \
+```
+
+```
+docker run -d \
+    --name authenticator \
+    --restart unless-stopped \
+    --log-opt max-size=1m \
+    --network host \
+    -e TZ="Asia/Shanghai" \
+    -e USERNAME=yourusernamehere \
+    -e PASSWORD=yourpasswordhere \
+    -e INTERFACES=eth0(the interface you plugged in, separate them with a period "." if you have more than one) \
+    -e init_url="yours" \
+    -e get_challenge_api="yours" \
+    -e srun_portal_api="yours" \
+    iskoldt/srunauthenticator:latest
+```
+
+[iskoldt/srunauthenticator](https://hub.docker.com/r/iskoldt/srunauthenticator)
+
+## 非Docker 运行校园网深澜认证Python 脚本
 
 编辑如下三个变量，分别是接入校园网的网口名字，用户名和密码。
 
@@ -33,7 +61,7 @@ username=''
 password=''
 ```
 
-非UCAS 用户还要更改：
+用户还要更改：
 
 ```
 init_url="https://portal.ucas.ac.cn"
@@ -51,6 +79,10 @@ python3 srun_login.py
 ```
 pip install netifaces
 ```
+
+## 声明
+
+SRUN-authenticator 只是一个用于方便同学们上网的工具，请确保您遵守有关隐私和数据保护的法律和法规。
 
 
 ## 来源
