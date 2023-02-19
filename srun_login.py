@@ -12,6 +12,9 @@ import os
 interfacelist = ['']
 username=''
 password=''
+init_url=''
+get_challenge_api=''
+srun_portal_api=''
 sleeptime = 300
 
 if interfacelist == ['']:
@@ -19,7 +22,14 @@ if interfacelist == ['']:
 if username == '':
     username = os.getenv('USERNAME').strip()
 if password == '':
-    password = os.getenv('PASSWORD')
+    password = os.getenv('PASSWORD').strip()
+if init_url == '':
+    init_url = os.getenv('init_url').strip()
+if get_challenge_api == '':
+    get_challenge_api = os.getenv('get_challenge_api').strip()
+if srun_portal_api == '':
+    srun_portal_api = os.getenv('srun_portal_api').strip()
+
 
 
 
@@ -27,9 +37,7 @@ header={
         'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36'
 }
 
-init_url="https://portal.ucas.ac.cn"
-get_challenge_api="https://portal.ucas.ac.cn/cgi-bin/get_challenge"
-srun_portal_api="https://portal.ucas.ac.cn/cgi-bin/srun_portal"
+
 
 n = '200'
 type = '1'
