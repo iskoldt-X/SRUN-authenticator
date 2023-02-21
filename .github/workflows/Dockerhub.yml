@@ -12,6 +12,10 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
+      - 
+        name: set release date
+        run: |
+          echo "RELEASE_DATE=$(date +%y.%m.%d)" >> ${GITHUB_ENV}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
