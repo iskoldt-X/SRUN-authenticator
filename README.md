@@ -1,6 +1,11 @@
 # 深澜认证Python 脚本
 
-<img src="https://img.shields.io/docker/pulls/iskoldt/srunauthenticator.svg"/>
+[![GitHub Stars](https://img.shields.io/github/stars/iskoldt-X/SRUN-authenticator.svg?style=flat-square&label=Stars&logo=github)](https://github.com/iskoldt-X/SRUN-authenticator/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/iskoldt-X/SRUN-authenticator.svg?style=flat-square&label=Forks&logo=github)](https://github.com/iskoldt-X/SRUN-authenticator/fork)
+[![Docker Stars](https://img.shields.io/docker/stars/iskoldt/lnmp.svg?style=flat-square&label=Stars&logo=docker)](https://hub.docker.com/r/iskoldt/srunauthenticator)
+[![Docker Pulls](https://img.shields.io/docker/pulls/iskoldt/lnmp.svg?style=flat-square&label=Pulls&logo=docker&color=orange)](https://hub.docker.com/r/iskoldt/srunauthenticator)
+
+
 
 校园网深澜认证Python 脚本，旨在方便同学们的日常使用。默认国科大，其他学校也可以使用。
 
