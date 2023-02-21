@@ -39,7 +39,7 @@ jobs:
         name: owner names
         run: |
           GITOWNER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')
-          
+          echo "GITOWNER=$GITOWNER" >> ${GITHUB_ENV}
       -
         name: Build and push
         uses: docker/build-push-action@v4
