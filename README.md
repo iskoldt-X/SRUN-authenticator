@@ -98,3 +98,7 @@ SRUN-authenticator 只是一个用于方便同学们上网的工具，请确保�
 [DingGuodong/LinuxBashShellScriptForOps](https://github.com/DingGuodong/LinuxBashShellScriptForOps/blob/master/projects/WindowsSystemOps/Network/getNetworkStatus.py)
 
 [Send http request through specific network interface](https://stackoverflow.com/questions/48996494/send-http-request-through-specific-network-interface)
+
+## Starchart
+
+<img src="https://starchart.cc/iskoldt-X/SRUN-authenticator.svg" alt="Stargazers over time" style="max-width: 100%">
