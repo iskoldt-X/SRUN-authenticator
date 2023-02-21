@@ -38,7 +38,7 @@ jobs:
       -
         name: owner names
         run: |
-          GITOWNER =$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')
+          GITOWNER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')
           
       -
         name: Build and push
