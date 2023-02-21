@@ -13,7 +13,7 @@ jobs:
         name: Checkout
         uses: actions/checkout@v3
       - 
-        name: set release date
+        name: Set release date
         run: |
           echo "RELEASE_DATE=$(date +%y.%m.%d)" >> ${GITHUB_ENV}
       -
@@ -36,7 +36,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.SAVEBOT_TOKEN }}
       -
-        name: owner names
+        name: Owner names
         run: |
           GITOWNER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')
           echo "GITOWNER=$GITOWNER" >> ${GITHUB_ENV}
