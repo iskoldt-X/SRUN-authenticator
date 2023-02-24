@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye AS build
+FROM python:3.9-slim-bullseye AS build
 COPY requirements.txt /requirements.txt
 RUN apt-get update && \
     apt-get install --no-install-suggests --no-install-recommends --yes python3-venv gcc python3-dev libpython3-dev && \
@@ -6,7 +6,7 @@ RUN apt-get update && \
     /venv/bin/pip install --upgrade pip setuptools wheel && \
     /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
 
-FROM python:3.11-slim-bullseye
+FROM python:3.9-slim-bullseye
 MAINTAINER iskoldt
 COPY --from=build /venv /venv
 COPY ./srun_login.py /app/
