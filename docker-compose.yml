@@ -1,0 +1,17 @@
+version: "3"
+services:
+  wifi-auth:
+    container_name: wifi-auth
+    image: iskoldt/srunauthenticator:latest
+    restart: unless-stopped
+    environment:
+      - USERNAME=your_username_here
+      - PASSWORD=your_password_here
+      - init_url=https://portal.ucas.ac.cn
+      - get_challenge_api=https://portal.ucas.ac.cn/cgi-bin/get_challenge
+      - srun_portal_api=https://portal.ucas.ac.cn/cgi-bin/srun_portal
+      - get_ip_api=http://124.16.81.61/cgi-bin/rad_user_info?callback=JQuery
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m

@@ -13,8 +13,9 @@ COPY ./srun_login.py /app/
 WORKDIR /app
 ENV USERNAME admin
 ENV PASSWORD password
-ENV INTERFACES eth0
 ENV init_url https://portal.ucas.ac.cn
 ENV get_challenge_api https://portal.ucas.ac.cn/cgi-bin/get_challenge
 ENV srun_portal_api https://portal.ucas.ac.cn/cgi-bin/srun_portal
+ENV get_ip_api http://124.16.81.61/cgi-bin/rad_user_info?callback=JQuery
+
 CMD ["/venv/bin/python3", "srun_login.py"]
