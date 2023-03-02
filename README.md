@@ -119,4 +119,5 @@ SRUN-authenticator 只是一个用于方便同学们上网的工具，请确保�
 
 ## Starchart
 
-<img src="https://starchart.cc/iskoldt-X/SRUN-authenticator.svg" alt="Stargazers over time" style="max-width: 100%">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=iskoldt-X/SRUN-authenticator&type=Date)](https://star-history.com/#iskoldt-X/SRUN-authenticator&Date)
