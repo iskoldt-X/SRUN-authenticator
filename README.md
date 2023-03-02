@@ -22,8 +22,26 @@ docker run -d \
     -e TZ="Asia/Shanghai" \
     -e USERNAME=yourusernamehere \
     -e PASSWORD=yourpasswordhere \
-    -e INTERFACES=eth0(the interface you plugged in, separate them with a period "." if you have more than one) \
+    -e INTERFACES=eth0 \
     iskoldt/srunauthenticator:latest
+```
+
+
+## 国科大同学使用软路由“多拨”校园网可以多插线
+
+使用`23.02.24`版本
+
+```
+docker run -d \
+    --name authenticator \
+    --restart unless-stopped \
+    --log-opt max-size=1m \
+    --network host \
+    -e TZ="Asia/Shanghai" \
+    -e USERNAME=yourusernamehere \
+    -e PASSWORD=yourpasswordhere \
+    -e INTERFACES=eth0.eth1(the interface you plugged in, separate them with a period "." if you have more than one) \
+    iskoldt/srunauthenticator:23.02.24
 ```
 
 [iskoldt/srunauthenticator](https://hub.docker.com/r/iskoldt/srunauthenticator)
