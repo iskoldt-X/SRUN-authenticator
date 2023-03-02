@@ -1,24 +1,22 @@
 #!/usr/bin/python3
-
+import json
 import requests
 import time
 import re
-import netifaces
 import hmac
 import hashlib
 import math
 import os
 
-interfacelist = ['']
-username=''
-password=''
-init_url=''
-get_challenge_api=''
-srun_portal_api=''
+username = ''
+password = ''
+get_ip_api = ''
+init_url = ''
+get_challenge_api = ''
+srun_portal_api = ''
 sleeptime = 300
 
-if interfacelist == ['']:
-    interfacelist = os.getenv('INTERFACES').strip().split('.')
+
 if username == '':
     username = os.getenv('USERNAME').strip()
 if password == '':
@@ -29,72 +27,53 @@ if get_challenge_api == '':
     get_challenge_api = os.getenv('get_challenge_api').strip()
 if srun_portal_api == '':
     srun_portal_api = os.getenv('srun_portal_api').strip()
+if get_ip_api == '':
+    get_ip_api = os.getenv('get_ip_api').strip()
 
-
-
-
-header={
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36'
+header = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36'
 }
-
-
 
 n = '200'
 type = '1'
-ac_id='1'
+ac_id = '1'
 enc = "srun_bx1"
 
-_PADCHAR = "="
 _ALPHA = "LVoJPiCN2R8G90yg+hmFHuacZ1OWMnrsSTXkYpUq/3dlbfKwv6xztjI7DeBE45QA"
 
-def session_for_src_addr(addr: str) -> requests.Session:
-    """
-    Create `Session` which will bind to the specified local address
-    rather than auto-selecting it.
-    """
-    session = requests.Session()
-    for prefix in ('http://', 'https://'):
-        session.get_adapter(prefix).init_poolmanager(
-            # those are default values from HTTPAdapter's constructor
-            connections=requests.adapters.DEFAULT_POOLSIZE,
-            maxsize=requests.adapters.DEFAULT_POOLSIZE,
-            # This should be a tuple of (address, port). Port 0 means auto-selection.
-            source_address=(addr, 0),
-        )
-
-    return session
 
 def _getbyte(s, i):
-    x = ord(s[i]);
-    if (x > 255):
-        print("{0} INVALID_CHARACTER_ERR: DOM Exception 5".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))), flush=True)
+    x = ord(s[i])
+    if x > 255:
+        print("{0} INVALID_CHARACTER_ERR: DOM Exception 5".format(
+            time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))), flush=True)
         exit(0)
     return x
 
-def get_base64(s):
-    i=0
-    b10=0
-    x = []
-    imax = len(s) - len(s) % 3;
-    if len(s) == 0:
-        return s
-    for i in range(0,imax,3):
-        b10 = (_getbyte(s, i) << 16) | (_getbyte(s, i + 1) << 8) | _getbyte(s, i + 2);
-        x.append(_ALPHA[(b10 >> 18)]);
-        x.append(_ALPHA[((b10 >> 12) & 63)]);
-        x.append(_ALPHA[((b10 >> 6) & 63)]);
-        x.append(_ALPHA[(b10 & 63)])
-    i=imax
-    if len(s) - imax ==1:
-        b10 = _getbyte(s, i) << 16;
-        x.append(_ALPHA[(b10 >> 18)] + _ALPHA[((b10 >> 12) & 63)] + _PADCHAR + _PADCHAR);
-    else:
-        b10 = (_getbyte(s, i) << 16) | (_getbyte(s, i + 1) << 8);
-        x.append(_ALPHA[(b10 >> 18)] + _ALPHA[((b10 >> 12) & 63)] + _ALPHA[((b10 >> 6) & 63)] + _PADCHAR);
-    return "".join(x)
 
-def get_md5(password,token):
-        return hmac.new(token.encode(), password.encode(), hashlib.md5).hexdigest()
+def get_base64(s):
+    r = []
+    x = len(s) % 3
+    if x:
+        s = s + '\0' * (3 - x)
+    for i in range(0, len(s), 3):
+        d = s[i:i + 3]
+        a = ord(d[0]) << 16 | ord(d[1]) << 8 | ord(d[2])
+        r.append(_ALPHA[a >> 18])
+        r.append(_ALPHA[a >> 12 & 63])
+        r.append(_ALPHA[a >> 6 & 63])
+        r.append(_ALPHA[a & 63])
+    if x == 1:
+        r[-1] = '='
+        r[-2] = '='
+    if x == 2:
+        r[-1] = '='
+    return ''.join(r)
+
+
+def get_md5(password, token):
+    return hmac.new(token.encode(), password.encode(), hashlib.md5).hexdigest()
+
 
 def force(msg):
     ret = []
@@ -102,10 +81,12 @@ def force(msg):
         ret.append(ord(w))
     return bytes(ret)
 
+
 def ordat(msg, idx):
     if len(msg) > idx:
         return ord(msg[idx])
     return 0
+
 
 def sencode(msg, key):
     l = len(msg)
@@ -117,6 +98,7 @@ def sencode(msg, key):
     if key:
         pwd.append(l)
     return pwd
+
 
 def lencode(msg, key):
     l = len(msg)
@@ -132,6 +114,7 @@ def lencode(msg, key):
     if key:
         return "".join(msg)[0:ll]
     return "".join(msg)
+
 
 def get_xencode(msg, key):
     if msg == "":
@@ -170,98 +153,112 @@ def get_xencode(msg, key):
         q = q - 1
     return lencode(pwd, False)
 
+
 def get_sha1(value):
     return hashlib.sha1(value.encode()).hexdigest()
 
+
 def get_chksum():
-        chkstr = token+username
-        chkstr += token+hmd5
-        chkstr += token+ac_id
-        chkstr += token+ip
-        chkstr += token+n
-        chkstr += token+type
-        chkstr += token+i
-        return chkstr
+    chkstr = token + username
+    chkstr += token + hmd5
+    chkstr += token + ac_id
+    chkstr += token + ip
+    chkstr += token + n
+    chkstr += token + type
+    chkstr += token + i
+    return chkstr
+
 
 def get_info():
-        info_temp={
-                "username":username,
-                "password":password,
-                "ip":ip,
-                "acid":ac_id,
-                "enc_ver":enc
-        }
-        i=re.sub("'",'"',str(info_temp))
-        i=re.sub(" ",'',i)
-        return i
+    info_temp = {
+        "username": username,
+        "password": password,
+        "ip": ip,
+        "acid": ac_id,
+        "enc_ver": enc
+    }
+    i = re.sub("'", '"', str(info_temp))
+    i = re.sub(" ", '', i)
+    return i
 
-def init_getip(interface):
-    ip = netifaces.ifaddresses(interface)[2][0]['addr']
-    print("{0} 获取{1}端口的ip".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), interface), flush=True)
-    print("{0} ip:".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))+ip, flush=True)
+
+def init_getip():
+    global ip
+    res = requests.get(get_ip_api)
+    # [7:-1]是为了去掉前面的 jQuery( 和后面的 )
+    data = json.loads(res.text[7:-1])
+    ip = data.get('client_ip') or data.get('online_ip')
+    print("{0} ip:".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + ip, flush=True)
     return ip
 
-def get_token():
-        # print("{0} 获取token".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))), flush=True)
-        global token
-        get_challenge_params={
-                "callback": "jQuery112404953340710317169_"+str(int(time.time()*1000)),
-                "username":username,
-                "ip":ip,
-                "_":int(time.time()*1000),
-        }
-        test = session_for_src_addr(ip)
-        get_challenge_res=test.get(get_challenge_api,params=get_challenge_params,headers=header)
-        token=re.search('"challenge":"(.*?)"',get_challenge_res.text).group(1)
-        print("{0} {1}".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), get_challenge_res.text), flush=True)
-        print("{0}token为:".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))+token, flush=True)
 
-def isConnected(ip):
+def get_token():
+    # print("{0} 获取token".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))), flush=True)
+    global token
+    get_challenge_params = {
+        "callback": "jQuery112404953340710317169_" + str(int(time.time() * 1000)),
+        "username": username,
+        "ip": ip,
+        "_": int(time.time() * 1000),
+    }
+    test = requests.Session()
+    get_challenge_res = test.get(get_challenge_api, params=get_challenge_params, headers=header)
+    token = re.search('"challenge":"(.*?)"', get_challenge_res.text).group(1)
+    print("{0} {1}".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), get_challenge_res.text),
+          flush=True)
+    print("{0}token为:".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + token, flush=True)
+
+
+def is_connected():
     try:
-        baidu = session_for_src_addr(ip)
-        html = baidu.get("https://www.baidu.com", timeout = 2)
+        session = requests.Session()
+        html = session.get("https://www.baidu.com", timeout=2)
     except:
         return False
     return True
 
+
 def do_complex_work():
-        global i,hmd5,chksum
-        i=get_info()
-        i="{SRBX1}"+get_base64(get_xencode(i,token))
-        hmd5=get_md5(password,token)
-        chksum=get_sha1(get_chksum())
-        print("{0} 所有加密工作已完成".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))), flush=True)
-    
+    global i, hmd5, chksum
+    i = get_info()
+    i = "{SRBX1}" + get_base64(get_xencode(i, token))
+    hmd5 = get_md5(password, token)
+    chksum = get_sha1(get_chksum())
+    print("{0} 所有加密工作已完成".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))), flush=True)
+
+
 def login():
-        srun_portal_params={
-        'callback': 'jQuery11240645308969735664_'+str(int(time.time()*1000)),
-        'action':'login',
-        'username':username,
-        'password':'{MD5}'+hmd5,
-        'ac_id':ac_id,
-        'ip':ip,
-        'chksum':chksum,
-        'info':i,
-        'n':n,
-        'type':type,
-        'os':'windows+10',
-        'name':'windows',
-        'double_stack':'0',
-        '_':int(time.time()*1000)
-        }
-        # print(srun_portal_params)
-        test = session_for_src_addr(ip)
-        srun_portal_res=test.get(srun_portal_api,params=srun_portal_params,headers=header)
-        print("{0} {1}".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), srun_portal_res.text), flush=True)
+    srun_portal_params = {
+        'callback': 'jQuery11240645308969735664_' + str(int(time.time() * 1000)),
+        'action': 'login',
+        'username': username,
+        'password': '{MD5}' + hmd5,
+        'ac_id': ac_id,
+        'ip': ip,
+        'chksum': chksum,
+        'info': i,
+        'n': n,
+        'type': type,
+        'os': 'windows+10',
+        'name': 'windows',
+        'double_stack': '0',
+        '_': int(time.time() * 1000)
+    }
+    # print(srun_portal_params)
+    test = requests.Session()
+    srun_portal_res = test.get(srun_portal_api, params=srun_portal_params, headers=header)
+    print("{0} {1}".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), srun_portal_res.text),
+          flush=True)
+
 
 if __name__ == '__main__':
     while True:
-        for interface in interfacelist:
-            ip = init_getip(interface)
-            if isConnected(ip):
-                print('{0} 端口{1}已通过认证，无需再次认证'.format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), interface), flush=True)
-            else:
-                get_token()
-                do_complex_work()
-                login()
+        if is_connected():
+            print('{0} 已通过认证，无需再次认证'.format(
+                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))), flush=True)
+        else:
+            ip = init_getip()
+            get_token()
+            do_complex_work()
+            login()
         time.sleep(sleeptime)
