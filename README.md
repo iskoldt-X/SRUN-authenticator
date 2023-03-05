@@ -2,7 +2,6 @@
 
 [![GitHub Stars](https://img.shields.io/github/stars/iskoldt-X/SRUN-authenticator.svg?style=flat-square&label=Stars&logo=github)](https://github.com/iskoldt-X/SRUN-authenticator/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/iskoldt-X/SRUN-authenticator.svg?style=flat-square&label=Forks&logo=github)](https://github.com/iskoldt-X/SRUN-authenticator/fork)
-[![Docker Stars](https://img.shields.io/docker/stars/iskoldt/srunauthenticator.svg?style=flat-square&label=Stars&logo=docker)](https://hub.docker.com/r/iskoldt/srunauthenticator)
 [![Docker Pulls](https://img.shields.io/docker/pulls/iskoldt/srunauthenticator.svg?style=flat-square&label=Pulls&logo=docker&color=orange)](https://hub.docker.com/r/iskoldt/srunauthenticator)
 
 
