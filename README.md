@@ -121,3 +121,10 @@ SRUN-authenticator 只是一个用于方便同学们上网的工具，请确保�
 
 
 [![Star History Chart](https://api.star-history.com/svg?repos=iskoldt-X/SRUN-authenticator&type=Date)](https://star-history.com/#iskoldt-X/SRUN-authenticator&Date)
+
+## Contributors
+
+<a href="https://github.com/iskoldt-X/SRUN-authenticator/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=iskoldt-X/SRUN-authenticator" />
+</a>
+
