@@ -10,6 +10,8 @@
 
 本脚本已经支持通过Docker 运行!
 
+[iskoldt/srunauthenticator](https://hub.docker.com/r/iskoldt/srunauthenticator)
+
 ## 国科大同学用Docker 运行校园网深澜认证Python 脚本
 
 ```
@@ -43,7 +45,6 @@ docker run -d \
     iskoldt/srunauthenticator:23.02.24
 ```
 
-[iskoldt/srunauthenticator](https://hub.docker.com/r/iskoldt/srunauthenticator)
 
 ## 其他学校的朋友用Docker 运行校园网深澜认证Python 脚本
 
@@ -71,7 +72,6 @@ docker run -d \
     iskoldt/srunauthenticator:latest
 ```
 
-[iskoldt/srunauthenticator](https://hub.docker.com/r/iskoldt/srunauthenticator)
 
 ## 非Docker 运行校园网深澜认证Python 脚本
 
