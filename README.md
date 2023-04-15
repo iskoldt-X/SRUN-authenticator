@@ -83,9 +83,10 @@ username=''
 password=''
 ```
 
-用户还要更改：
+非国科大用户还要更改：
 
 ```
+get_ip_api='http://124.16.81.61/cgi-bin/rad_user_info?callback=JQuery'
 init_url="https://portal.ucas.ac.cn"
 get_challenge_api="https://portal.ucas.ac.cn/cgi-bin/get_challenge"
 srun_portal_api="https://portal.ucas.ac.cn/cgi-bin/srun_portal"
