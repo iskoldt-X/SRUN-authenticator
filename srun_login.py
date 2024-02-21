@@ -1,28 +1,26 @@
 #!/usr/bin/python3
-import json
-import requests
-import time
-import re
-import hmac
 import hashlib
+import hmac
+import json
 import math
 import os
+import re
+import time
+
+import requests
 
 username = ''
 password = ''
 get_ip_api = ''
-init_url = ''
 get_challenge_api = ''
 srun_portal_api = ''
-sleeptime = 300
-
+sleep_time = 300
+max_retries = 10  # 最大重连次数
 
 if username == '':
     username = os.getenv('USERNAME').strip()
 if password == '':
     password = os.getenv('PASSWORD').strip()
-if init_url == '':
-    init_url = os.getenv('init_url').strip()
 if get_challenge_api == '':
     get_challenge_api = os.getenv('get_challenge_api').strip()
 if srun_portal_api == '':
@@ -31,27 +29,22 @@ if get_ip_api == '':
     get_ip_api = os.getenv('get_ip_api').strip()
 
 header = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                  'AppleWebKit/537.36 (KHTML, like Gecko) '
+                  'Chrome/120.0.0.0'
+                  'Safari/537.36 Edg/120.0.0.0'
 }
 
 n = '200'
-type = '1'
-ac_id = '1'
-enc = "srun_bx1"
+type = '1'  # 常量，作用未知
+ac_id = '1'  # 常量，作用未知
+enc = "srun_bx1"  # 常量，作用未知
 
 _ALPHA = "LVoJPiCN2R8G90yg+hmFHuacZ1OWMnrsSTXkYpUq/3dlbfKwv6xztjI7DeBE45QA"
 
 
-def _getbyte(s, i):
-    x = ord(s[i])
-    if x > 255:
-        print("{0} INVALID_CHARACTER_ERR: DOM Exception 5".format(
-            time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))), flush=True)
-        exit(0)
-    return x
-
-
 def get_base64(s):
+    s: str
     r = []
     x = len(s) % 3
     if x:
@@ -71,15 +64,9 @@ def get_base64(s):
     return ''.join(r)
 
 
-def get_md5(password, token):
+def get_hmd5():
+    global password, token
     return hmac.new(token.encode(), password.encode(), hashlib.md5).hexdigest()
-
-
-def force(msg):
-    ret = []
-    for w in msg:
-        ret.append(ord(w))
-    return bytes(ret)
 
 
 def ordat(msg, idx):
@@ -159,14 +146,16 @@ def get_sha1(value):
 
 
 def get_chksum():
-    chkstr = token + username
-    chkstr += token + hmd5
-    chkstr += token + ac_id
-    chkstr += token + ip
-    chkstr += token + n
-    chkstr += token + type
-    chkstr += token + i
-    return chkstr
+    parts = [
+        token + username,
+        token + hmd5,
+        token + ac_id,
+        token + ip,
+        token + n,
+        token + type,
+        token + i
+    ]
+    return get_sha1(''.join(parts))
 
 
 def get_info():
@@ -182,49 +171,29 @@ def get_info():
     return i
 
 
-def init_getip():
-    global ip
+def get_ip():
+    """
+    获取ip并返回ip字符串
+    """
     res = requests.get(get_ip_api)
     # [7:-1]是为了去掉前面的 jQuery( 和后面的 )
     data = json.loads(res.text[7:-1])
-    ip = data.get('client_ip') or data.get('online_ip')
-    print("{0} ip:".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + ip, flush=True)
-    return ip
+    return data.get('client_ip') or data.get('online_ip')
 
 
 def get_token():
-    # print("{0} 获取token".format(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))), flush=True)
-    global token
     get_challenge_params = {
         "callback": "jQuery112404953340710317169_" + str(int(time.time() * 1000)),
         "username": username,
         "ip": ip,
         "_": int(time.time() * 1000),
     }
-    test = requests.Session()
-    get_challenge_res = test.get(get_challenge_api, params=get_challenge_params, headers=header)
-    token = re.search('"challenge":"(.*?)"', get_challenge_res.text).group(1)
-    print("{0} {1}".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), get_challenge_res.text),
-          flush=True)
-    print("{0}token为:".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))) + token, flush=True)
+    get_challenge_res_text = requests.Session().get(get_challenge_api, params=get_challenge_params, headers=header).text
+    return re.search('"challenge":"(.*?)"', get_challenge_res_text).group(1)
 
 
-def is_connected():
-    try:
-        session = requests.Session()
-        html = session.get("https://www.baidu.com", timeout=2)
-    except:
-        return False
-    return True
-
-
-def do_complex_work():
-    global i, hmd5, chksum
-    i = get_info()
-    i = "{SRBX1}" + get_base64(get_xencode(i, token))
-    hmd5 = get_md5(password, token)
-    chksum = get_sha1(get_chksum())
-    print("{0} 所有加密工作已完成".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))), flush=True)
+def get_i():
+    return "{SRBX1}" + get_base64(get_xencode(get_info(), token))
 
 
 def login():
@@ -235,7 +204,7 @@ def login():
         'password': '{MD5}' + hmd5,
         'ac_id': ac_id,
         'ip': ip,
-        'chksum': chksum,
+        'chksum': chksum,  # chk也许是check的缩写
         'info': i,
         'n': n,
         'type': type,
@@ -245,20 +214,58 @@ def login():
         '_': int(time.time() * 1000)
     }
     # print(srun_portal_params)
-    test = requests.Session()
-    srun_portal_res = test.get(srun_portal_api, params=srun_portal_params, headers=header)
-    print("{0} {1}".format(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), srun_portal_res.text),
-          flush=True)
+    srun_portal_res = requests.Session().get(srun_portal_api, params=srun_portal_params, headers=header)
+
+    print(get_current_time(), flush=True, end=" ")
+    print(srun_portal_res.text, flush=True)
+
+
+def check_network(url="https://www.baidu.com", timeout=2):
+    try:
+        with requests.Session() as session:
+            response = session.get(url, timeout=timeout)
+            response.raise_for_status()  # 如果响应状态码不是200，将引发HTTPError异常
+        return True
+    except requests.exceptions.RequestException:
+        return False
+
+
+def get_current_time():
+    """
+    获取当前时间并以 'YYYY-MM-DD HH:MM:SS' 的格式返回。
+    """
+    current_time = time.localtime(time.time())  # 获取当前时间的时间元组
+    formatted_time = time.strftime('%Y-%m-%d %H:%M:%S', current_time)  # 将时间元组格式化为字符串
+    return formatted_time
 
 
 if __name__ == '__main__':
     while True:
-        if is_connected():
-            print('{0} 已通过认证，无需再次认证'.format(
-                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))), flush=True)
-        else:
-            ip = init_getip()
-            get_token()
-            do_complex_work()
+        retry_count = 0  # 重置重连计数器
+        while not check_network():
+            # 如果网络未连接，增加重连计数
+            retry_count += 1
+
+            ip = get_ip()
+            print(get_current_time() + "ip:" + ip, flush=True)
+
+            token = get_token()
+            print(get_current_time() + "token为:" + token, flush=True)
+
+            i = get_i()
+            hmd5 = get_hmd5()
+            chksum = get_chksum()
+
             login()
-        time.sleep(sleeptime)
+
+            # 检查是否达到了最大重连次数
+            # 如果达到最大重连次数，等待一段时间后再次尝试
+            if retry_count >= max_retries:
+                print("已达到最大重连次数，暂停连接稍后再试")
+                retry_count = 0
+                time.sleep(sleep_time)
+        print(get_current_time(), flush=True, end=" ")
+        print('已通过认证，无需再次认证')
+
+        # 等待一段时间
+        time.sleep(sleep_time)
