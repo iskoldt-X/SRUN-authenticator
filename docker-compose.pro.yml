@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  srun-auth:
+    image: ghcr.io/${GITHUB_REPOSITORY_LOWER:-claw-king/srun-authenticator}:latest
+    container_name: srun-authenticator
+    restart: unless-stopped
+    environment:
+      # --- Mandatory ---
+      - USERNAME=${SRUN_USERNAME}
+      - PASSWORD=${SRUN_PASSWORD}
+      
+      # --- Optional / Defaults (UCAS) ---
+      - SLEEP_TIME=300
+      - HEALTH_CHECK_URL=https://www.google.com/generate_204
+      - GET_IP_API=http://124.16.81.61/cgi-bin/rad_user_info?callback=JQuery
+      - GET_CHALLENGE_API=https://portal.ucas.ac.cn/cgi-bin/get_challenge
+      - SRUN_PORTAL_API=https://portal.ucas.ac.cn/cgi-bin/srun_portal
+      - INIT_URL=https://portal.ucas.ac.cn
+      
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
