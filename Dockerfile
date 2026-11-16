@@ -2,6 +2,7 @@ FROM python:3.9-slim-bookworm AS build
 COPY requirements.txt /requirements.txt
 RUN apt-get update && \
     apt-get install --no-install-suggests --no-install-recommends --yes python3-venv gcc python3-dev libpython3-dev && \
+    rm -rf /var/lib/apt/lists/* && \
     python3 -m venv /venv && \
     /venv/bin/pip install --upgrade pip setuptools wheel && \
     /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
