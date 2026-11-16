@@ -1,14 +1,15 @@
-FROM python:3.11-slim-bullseye AS build
+FROM python:3.11-slim-bookworm AS build
 # Build tools only for building wheels
 RUN apt-get update && \
-    apt-get install --no-install-suggests --no-install-recommends --yes gcc python3-dev
+    apt-get install --no-install-suggests --no-install-recommends --yes gcc python3-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /requirements.txt
 RUN python3 -m venv /venv && \
     /venv/bin/pip install --no-cache-dir --upgrade pip setuptools wheel && \
     /venv/bin/pip install --no-cache-dir -r /requirements.txt
 
-FROM python:3.11-slim-bullseye
+FROM python:3.11-slim-bookworm
 LABEL maintainer="iskoldt-X"
 LABEL description="Torvalds-tier SRUN Authenticator"
 
